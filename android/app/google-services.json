@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "286574562115",
+    "project_id": "uas-diki",
+    "storage_bucket": "uas-diki.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:286574562115:android:f2fb2e2366f5ffcc097df6",
+        "android_client_info": {
+          "package_name": "com.example.uas_diki"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAA5BCyjPS6VnGGUp4IcOaf4kIa5R-S66w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
