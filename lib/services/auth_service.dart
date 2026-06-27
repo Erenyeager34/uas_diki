@@ -45,4 +45,32 @@ class AuthService {
       return e.toString();
     }
   }
+
+  Future<String?> login({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+
+      return null;
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'user-not-found':
+          return 'Email tidak ditemukan';
+
+        case 'wrong-password':
+        case 'invalid-credential':
+          return 'Email atau password salah';
+
+        case 'invalid-email':
+          return 'Format email tidak valid';
+
+        default:
+          return e.message ?? 'Terjadi kesalahan';
+      }
+    } catch (e) {
+      return e.toString();
+    }
+  }
 }

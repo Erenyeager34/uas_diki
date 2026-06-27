@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'product_screen.dart';
 
 class AdminDashboard extends StatelessWidget {
   AdminDashboard({super.key});
@@ -84,7 +85,12 @@ class AdminDashboard extends StatelessWidget {
                 leading: const Icon(Icons.shopping_bag),
                 title: const Text("Kelola Produk"),
                 trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const ProductScreen()),
+                  );
+                },
               ),
             ),
 

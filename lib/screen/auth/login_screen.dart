@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../widget/custom_button.dart';
 import '../../widget/custom_textfield.dart';
+import '../../services/auth_service.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -9,6 +10,7 @@ class LoginScreen extends StatelessWidget {
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final AuthService authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +56,18 @@ class LoginScreen extends StatelessWidget {
 
               const SizedBox(height: 30),
 
-              CustomButton(text: "LOGIN", onPressed: () {}),
+              CustomButton(
+                text: "LOGIN",
+                onPressed: () async {
+                  print("LOGIN DITEKAN");
+                  String? result = await authService.login(
+                    email: emailController.text.trim(),
+                    password: passwordController.text.trim(),
+                  );
+
+                  print(result);
+                },
+              ),
 
               const SizedBox(height: 20),
 
