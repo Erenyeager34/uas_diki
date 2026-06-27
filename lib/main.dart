@@ -4,7 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'screen/auth/login_screen.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -19,8 +19,9 @@ class KasirApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Aplikasi Kasir',
-      home: const LoginScreen(),
+      title: 'MyCashier',
+      theme: ThemeData(colorSchemeSeed: Colors.blue, useMaterial3: true),
+      home: LoginScreen(),
     );
   }
 }
