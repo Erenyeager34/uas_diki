@@ -73,4 +73,26 @@ class AuthService {
       return e.toString();
     }
   }
+
+  Future<String?> getUserRole() async {
+    User? user = _auth.currentUser;
+
+    if (user == null) return null;
+
+    DocumentSnapshot doc = await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .get();
+
+    if (!doc.exists) {
+      return null;
+    }
+
+    final data = doc.data() as Map<String, dynamic>;
+    return data['role'];
+  }
+
+  Future<void> logout() async {
+    await _auth.signOut();
+  }
 }

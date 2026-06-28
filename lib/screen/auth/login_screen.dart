@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../widget/custom_button.dart';
 import '../../widget/custom_textfield.dart';
 import '../../services/auth_service.dart';
+import '../admin/dashboard_admin.dart';
+import '../cashier/dashboard_cashier.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -59,13 +61,40 @@ class LoginScreen extends StatelessWidget {
               CustomButton(
                 text: "LOGIN",
                 onPressed: () async {
-                  print("LOGIN DITEKAN");
                   String? result = await authService.login(
                     email: emailController.text.trim(),
                     password: passwordController.text.trim(),
                   );
 
-                  print(result);
+                  if (result != null) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(result)));
+                    return;
+                  }
+
+                  String? role = await authService.getUserRole();
+
+                  if (role == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Role pengguna tidak ditemukan"),
+                      ),
+                    );
+                    return;
+                  }
+
+                  if (role == "admin") {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => AdminDashboard()),
+                    );
+                  } else if (role == "kasir") {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => CashierDashboard()),
+                    );
+                  }
                 },
               ),
 

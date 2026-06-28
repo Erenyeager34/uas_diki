@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import '../../services/auth_service.dart';
+import '../auth/login_screen.dart';
 import 'product_screen.dart';
 
 class AdminDashboard extends StatelessWidget {
   AdminDashboard({super.key});
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final AuthService authService = AuthService();
 
   Stream<int> totalProduk() {
     return firestore
@@ -112,7 +115,42 @@ class AdminDashboard extends StatelessWidget {
                 leading: const Icon(Icons.logout),
                 title: const Text("Logout"),
                 trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () {},
+                onTap: () async {
+                  bool? logout = await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text("Logout"),
+                        content: const Text("Apakah Anda yakin ingin logout?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context, false);
+                            },
+                            child: const Text("Batal"),
+                          ),
+
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context, true);
+                            },
+                            child: const Text("Logout"),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+
+                  if (logout == true) {
+                    await authService.logout();
+
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (_) => LoginScreen()),
+                      (route) => false,
+                    );
+                  }
+                },
               ),
             ),
           ],

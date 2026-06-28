@@ -22,4 +22,8 @@ class ProductModel {
       kategori: data['kategori'] ?? '',
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {'nama': nama, 'harga': harga, 'stok': stok, 'kategori': kategori};
+  }
 }
