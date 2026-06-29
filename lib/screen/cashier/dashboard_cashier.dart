@@ -4,6 +4,7 @@ import '../../models/product_model.dart';
 import '../../services/auth_service.dart';
 import '../../models/cart_item.dart';
 import '../auth/login_screen.dart';
+import 'cart_screen.dart';
 
 class CashierDashboard extends StatefulWidget {
   const CashierDashboard({super.key});
@@ -14,6 +15,9 @@ class CashierDashboard extends StatefulWidget {
 
 class _CashierDashboardState extends State<CashierDashboard> {
   final FirestoreService firestoreService = FirestoreService();
+  final TextEditingController searchController = TextEditingController();
+
+  String keyword = "";
   final AuthService authService = AuthService();
   List<CartItem> cart = [];
 
@@ -108,6 +112,11 @@ class _CashierDashboardState extends State<CashierDashboard> {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
+              onChanged: (value) {
+                setState(() {
+                  keyword = value.toLowerCase();
+                });
+              },
             ),
 
             const SizedBox(height: 20),
@@ -131,7 +140,12 @@ class _CashierDashboardState extends State<CashierDashboard> {
                     return const Center(child: Text("Belum ada produk"));
                   }
 
-                  final products = snapshot.data!;
+                  final products = snapshot.data!
+                      .where(
+                        (product) =>
+                            product.nama.toLowerCase().contains(keyword),
+                      )
+                      .toList();
 
                   return ListView.builder(
                     itemCount: products.length,
@@ -139,6 +153,11 @@ class _CashierDashboardState extends State<CashierDashboard> {
                       final product = products[index];
 
                       return Card(
+                        elevation: 3,
+                        margin: const EdgeInsets.only(bottom: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                         child: ListTile(
                           leading: const CircleAvatar(
                             child: Icon(Icons.shopping_bag),
@@ -149,6 +168,8 @@ class _CashierDashboardState extends State<CashierDashboard> {
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Text(product.kategori),
+
                               Text("Rp ${product.harga}"),
 
                               Text("Stok : ${product.stok}"),
@@ -156,14 +177,12 @@ class _CashierDashboardState extends State<CashierDashboard> {
                           ),
 
                           trailing: ElevatedButton(
-                            onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("${product.nama} ditambahkan"),
-                                ),
-                              );
-                            },
-                            child: const Text("Tambah"),
+                            onPressed: product.stok == 0
+                                ? null
+                                : () {
+                                    tambahKeKeranjang(product);
+                                  },
+                            child: Text(product.stok == 0 ? "Habis" : "Tambah"),
                           ),
                         ),
                       );
@@ -177,9 +196,14 @@ class _CashierDashboardState extends State<CashierDashboard> {
       ),
 
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => CartScreen(cart: cart)),
+          );
+        },
         icon: const Icon(Icons.shopping_cart),
-        label: const Text("Keranjang"),
+        label: Text("Keranjang (${cart.length})"),
       ),
     );
   }
